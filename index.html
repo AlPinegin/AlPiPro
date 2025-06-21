@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlPine - AI-решения для вашего бизнеса</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        /* ====================
+           1. Глобальные стили и переменные
+           ==================== */
+        :root {
+            --dark-bg: #121418;
+            --dark-card: #1A1D23;
+            --primary-blue: #3A86FF;
+            --text-light: #F0F0F0;
+            --text-secondary: #a0a0a0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--dark-bg); font-family: 'Inter', sans-serif; color: var(--text-light); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        section { padding: 80px 0; }
+        h1, h2 { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 3.5rem; font-weight: 900; line-height: 1.2; }
+        h2 { font-size: 2.5rem; font-weight: 700; }
+        
+        /* ====================
+           2. Стили для компонентов
+           ==================== */
+        .btn { display: inline-block; background-color: var(--primary-blue); color: #fff; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 700; transition: transform 0.2s ease, background-color 0.2s ease; }
+        .btn:hover { transform: scale(1.05); background-color: #5d9eff; }
+        
+        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* ====================
+           3. Стили для секций
+           ==================== */
+
+        /* --- Шапка (Header) --- */
+        .header { position: fixed; width: 100%; top: 0; left: 0; padding: 20px 0; z-index: 1000; background-color: rgba(18, 20, 24, 0.8); backdrop-filter: blur(10px); }
+        .header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; text-decoration: none; color: var(--text-light); font-weight: 700; font-size: 1.5rem; }
+        .logo img { height: 40px; margin-right: 10px; }
+        .nav-desktop { display: flex; align-items: center; }
+        .nav-desktop a { color: var(--text-light); text-decoration: none; margin-left: 30px; font-weight: 400; transition: color 0.2s ease; }
+        .nav-desktop a:hover { color: var(--primary-blue); }
+        .header .btn { padding: 10px 20px; margin-left: 30px; }
+
+        /* --- Бургер-меню для мобильных --- */
+        .burger-menu { display: none; cursor: pointer; }
+        .burger-menu div { width: 25px; height: 3px; background-color: var(--text-light); margin: 5px 0; transition: all 0.3s ease; }
+        
+        .nav-mobile { display: flex; flex-direction: column; justify-content: center; align-items: center; position: fixed; top: 0; left: -100%; width: 100%; height: 100vh; background-color: var(--dark-bg); transition: left 0.3s ease; z-index: 999; }
+        .nav-mobile.is-active { left: 0; }
+        .nav-mobile a { color: var(--text-light); text-decoration: none; font-size: 2rem; margin: 20px 0; }
+
+        /* --- Главный экран (Hero) --- */
+        #hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
+        #hero::before { content: ''; position: absolute; top: 50%; left: 50%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(58, 134, 255, 0.15) 0%, rgba(58, 134, 255, 0) 70%); transform: translate(-50%, -50%); z-index: -1; }
+        #hero p { max-width: 600px; margin: 20px auto 40px; font-size: 1.2rem; color: var(--text-secondary); }
+
+        /* --- Услуги (Services) --- */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .service-card { background-color: var(--dark-card); padding: 30px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+        .service-card h3 { color: var(--primary-blue); margin-bottom: 15px; }
+        .service-card p { color: var(--text-secondary); }
+
+        /* --- Портфолио (Portfolio) --- */
+        .portfolio-case { background-color: var(--dark-card); border-radius: 12px; padding: 40px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .portfolio-mockup img { width: 100%; border-radius: 8px; }
+        .portfolio-desc h3 { margin-bottom: 15px; }
+        .portfolio-desc p { margin-bottom: 20px; color: var(--text-secondary); }
+
+        /* --- Контакты (Contact) --- */
+        .contact-form { max-width: 600px; margin: 0 auto; background-color: var(--dark-card); padding: 40px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .form-group { margin-bottom: 20px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: var(--dark-bg); color: var(--text-light); font-size: 1rem; }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .contact-form .btn { width: 100%; border: none; cursor: pointer; }
+        .contact-note { text-align: center; margin-top: 20px; color: var(--text-secondary); }
+        .contact-note a { color: var(--primary-blue); text-decoration: none; font-weight: 700; }
+
+        /* --- Подвал (Footer) --- */
+        .footer { text-align: center; padding: 40px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .footer .logo { justify-content: center; margin-bottom: 20px; }
+        .footer-contacts p { margin-bottom: 20px; color: var(--text-secondary); }
+        .footer-contacts a { color: var(--text-light); text-decoration: none; }
+        .copyright { margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* ====================
+           4. Адаптивность (Media Queries)
+           ==================== */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .nav-desktop { display: none; }
+            .burger-menu { display: block; }
+            .portfolio-case { grid-template-columns: 1fr; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====================
+         ШАПКА
+         ==================== -->
+    <header class="header">
+        <div class="container">
+            <a href="#hero" class="logo">
+                <!-- Встроенное лого через Base64 -->
+                <img src="logo.png" alt="AlPine Logo">
+                <span>AlPine</span>
+            </a>
+            <!-- Меню для десктопа -->
+            <nav class="nav-desktop">
+                <a href="#services">Услуги</a>
+                <a href="#portfolio">Портфолио</a>
+                <a href="#contact">Контакты</a>
+                <a href="#contact" class="btn">Консультация</a>
+            </nav>
+            <!-- Иконка бургер-меню для мобильных -->
+            <div class="burger-menu">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Выезжающее меню для мобильных -->
+    <nav class="nav-mobile">
+        <a href="#services">Услуги</a>
+        <a href="#portfolio">Портфолио</a>
+        <a href="#contact">Контакты</a>
+    </nav>
+
+    <main>
+        <!-- ====================
+             ГЛАВНЫЙ ЭКРАН
+             ==================== -->
+        <section id="hero">
+            <div class="container fade-in">
+                <h1>Дайте вашему бизнесу<br>крылья с помощью AI.</h1>
+                <p>Простые и доступные AI-решения для малого бизнеса, ИП и самозанятых, которые приносят реальные результаты.</p>
+                <a href="#contact" class="btn">Получить бесплатную консультацию</a>
+            </div>
+        </section>
+
+        <!-- ====================
+             УСЛУГИ
+             ==================== -->
+        <section id="services">
+            <div class="container">
+                <h2 class="fade-in">Как AlPine может вам помочь</h2>
+                <div class="services-grid">
+                    <div class="service-card fade-in" style="transition-delay: 0.1s;"><h3>AI-консалтинг</h3><p>Анализируем ваши процессы и находим точки роста, где AI может сэкономить вам время и деньги.</p></div>
+                    <div class="service-card fade-in" style="transition-delay: 0.2s;"><h3>AI-контент</h3><p>Автоматизируем создание текстов, описаний товаров и другого контента, освобождая ваши ресурсы.</p></div>
+                    <div class="service-card fade-in" style="transition-delay: 0.3s;"><h3>Простые AI-решения</h3><p>Разрабатываем кастомные инструменты и чат-ботов под ваши уникальные задачи.</p></div>
+                    <div class="service-card fade-in" style="transition-delay: 0.4s;"><h3>Прототипирование</h3><p>Быстро создаем и тестируем MVP вашей AI-идеи, чтобы проверить ее жизнеспособность без больших вложений.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ====================
+             ПОРТФОЛИО
+             ==================== -->
+        <section id="portfolio">
+            <div class="container">
+                <h2 class="fade-in">Наша работа в действии</h2>
+                <div class="portfolio-case fade-in">
+                    <div class="portfolio-mockup">
+                         <!-- Встроенный мокап через Base64 -->
+                        <img src="mockup.jpg" alt="Сайт eduard-ltd.com на экране ноутбука">
+                    </div>
+                    <div class="portfolio-desc">
+                        <h3>Корпоративный сайт для B2B-компании</h3>
+                        <p><strong>Клиент:</strong> Поставщик запчастей для сельхозтехники.</p>
+                        <p><strong>Задача:</strong> Разработать современную онлайн-визитку для компании из традиционного сектора, чтобы укрепить имидж и привлечь новых партнеров.</p>
+                        <a href="https://eduard-ltd.com/" target="_blank" class="btn">Посмотреть проект</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================
+             КОНТАКТЫ
+             ==================== -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="fade-in">Готовы оптимизировать ваш бизнес?</h2>
+                <!-- ИНТЕГРАЦИЯ С FORMSUBMIT.CO -->
+                <form action="https://formsubmit.co/92927e6d6164d765d52f610af269f973" method="POST" class="contact-form fade-in">
+                    <!-- Страница "Спасибо" после отправки -->
+                    <input type="hidden" name="_next" value="https://alpine.com/thanks.html"> <!-- Замените на ваш домен, когда он будет -->
+                    <input type="hidden" name="_subject" value="Новая заявка с сайта AlPine!">
+                    <input type="hidden" name="_captcha" value="false"> <!-- Отключаем капчу formsubmit -->
+
+                    <div class="form-group"><input type="text" name="name" placeholder="Ваше имя" required></div>
+                    <div class="form-group"><input type="text" name="contact" placeholder="Email или WhatsApp/Telegram" required></div>
+                    <div class="form-group"><textarea name="message" placeholder="Опишите вашу идею"></textarea></div>
+                    <button type="submit" class="btn">Отправить заявку</button>
+                    <p class="contact-note">Или напишите нам напрямую в <a href="https://wa.me/77009147349" target="_blank">WhatsApp</a> / <a href="https://t.me/sogitrew" target="_blank">Telegram</a></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- ====================
+         ПОДВАЛ
+         ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <a href="#hero" class="logo">
+                <img src="logo.png" alt="AlPine Logo">
+                <span>AlPine</span>
+            </a>
+            <div class="footer-contacts"><p><a href="mailto:sogitrew@gmail.com">sogitrew@gmail.com</a> | <a href="tel:+77009147349">+7 700 914 7349</a></p></div>
+            <p class="copyright">2025 &copy; AlPine & AIStudio </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Скрипт для бургер-меню ---
+            const burger = document.querySelector('.burger-menu');
+            const mobileNav = document.querySelector('.nav-mobile');
+            const mobileNavLinks = document.querySelectorAll('.nav-mobile a');
+
+            burger.addEventListener('click', () => {
+                mobileNav.classList.toggle('is-active');
+            });
+
+            // Закрывать меню при клике на ссылку
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileNav.classList.remove('is-active');
+                });
+            });
+
+            // --- Скрипт для анимации появления элементов ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            const elementsToAnimate = document.querySelectorAll('.fade-in');
+            elementsToAnimate.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
